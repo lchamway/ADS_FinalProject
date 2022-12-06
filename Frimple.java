@@ -4,35 +4,35 @@ import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
 public class Frimple {
 
     // Checks the word list to see if the word is legal
-    public static boolean contains(String[] search, String question, int length){
-        for(int i = 0; i < length; i++){
-            if(search[i].equals(question)){
+    public static boolean contains(String[] search, String question, int length) {
+        for (int i = 0; i < length; i++) {
+            if (search[i].equals(question)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean allContains(ArrayList<String> search, String[] question, int length){
+    // Checks if the word has the required characters in any order
+    public static boolean allContains(ArrayList<String> search, String[] question, int length) {
         int present = 0;
 
-        for(int i = 0; i < length; i++){
-            if(search.contains(question[i])){
+        for (int i = 0; i < length; i++) {
+            if (search.contains(question[i])) {
                 present++;
             }
         }
 
-        if(present == length){
+        if (present == length) {
             return true;
         }
         return false;
     }
 
-    //Needed to input a timer here as well as a score system?
+    // Needed to input a timer here as well as a score system?
     public static void main(String[] args) {
         // Initialize the neccessary structures before the game begins
         String[] wordList = new String[15000];
@@ -43,6 +43,7 @@ public class Frimple {
 
         // This will read the file and then make an array list of legal words for the
         // game
+
         try {
             fileScan = new Scanner(inputFile);
         } catch (FileNotFoundException e) {
@@ -59,32 +60,61 @@ public class Frimple {
         // Start the game with player scanners
         Scanner ansOne = new Scanner(System.in);
         Scanner ansTwo = new Scanner(System.in);
+
+        ArrayList<String> p1Words = new ArrayList<String>();
+        ArrayList<String> p2Words = new ArrayList<String>();
+
         int turnCount = 1;
-        String key;
 
-        while(turnCount <= 3){
-        System.out.println("Word number " + turnCount);
-        String ans = ansOne.nextLine();
-        key = "ade";
-        String[] keyBreak = key.split("");
+        String key = "a";
+        boolean gameWin = false;
 
-        String[] split = ans.split("");
-        
-        for(int i = 0; i < split.length; i++){
-            guess.add(split[i]);
-        }
+        while (gameWin == false) {
+            if (turnCount % 2 == 1) {
+                System.out.println("Player 1's turn:: ");
+                String ans = ansOne.nextLine();
+                String[] keyBreak = key.split("");
 
-            if(contains(wordList, ans, length) == true && allContains(guess, keyBreak, keyBreak.length)){
+                String[] split = ans.split("");
 
-                System.out.println(ans);
-                turnCount++;
+                for (int i = 0; i < split.length; i++) {
+                    guess.add(split[i]);
+                }
+
+                if (contains(wordList, ans, length) == true && allContains(guess, keyBreak, keyBreak.length)
+                        && !p2Words.contains(ans)) {
+
+                    System.out.println(ans);
+                    p1Words.add(ans);
+                    turnCount++;
+                } else {
+                    System.out.println("Please pick another word!");
+                }
+
+                guess.clear();
+            } else {
+                System.out.println("Player 2's turn:: ");
+                String ans = ansOne.nextLine();
+                String[] keyBreak = key.split("");
+
+                String[] split = ans.split("");
+
+                for (int i = 0; i < split.length; i++) {
+                    guess.add(split[i]);
+                }
+
+                if (contains(wordList, ans, length) == true && allContains(guess, keyBreak, keyBreak.length)
+                        && !p1Words.contains(ans)) {
+
+                    System.out.println(ans);
+                    p2Words.add(ans);
+                    turnCount++;
+                } else {
+                    System.out.println("Please pick another word!");
+                }
+
+                guess.clear();
             }
-            else{
-                System.out.println("Please pick another word!");
-            }
-
-            guess.clear();
         }
-
     }
 }
